@@ -3,7 +3,7 @@ package models;
 public enum Genre {
 
     COMEDY,
-    HORROR,
+    DRAMA,
     ROMANCE,
     FANASTY
 }

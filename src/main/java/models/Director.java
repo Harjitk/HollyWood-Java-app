@@ -15,19 +15,24 @@ public class Director extends FilmCrew {
     private List<Film> films;
 
     public Director() {
+
+    }
+
+    public Director (String firstName, String lastName, int money) {
+        super(firstName, lastName, money);
+//        this.films = new ArrayList<Film>();
     }
 
 
-    public Director(int id, String firstName, String lastName, int money, List<Film> films) {
-        super(id, firstName, lastName, money);
-        this.films = films;
-    }
-
-    public List<Film> getFilms() {
-        return films;
-    }
-
-    public void setFilms(List<Film> films) {
-        this.films = films;
-    }
+//    @Column(name = "film")
+//    public List<Film> getFilms() {
+//        return films;
+//    }
+//
+//    public void setFilms(List<Film> films) {
+//        this.films = films;
+//    }
 }
+
+
+

@@ -1,5 +1,7 @@
 package models;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,20 +14,17 @@ public class Film {
     private int id;
     private String title;
     private Genre genre;
-    private Director director;
-    private List<FilmCrew> filmCrew;
     private Studio studio;
+    private List<FilmCrew> filmCrews;
 
     public Film() {
     }
 
-    public Film(int id, String title, Genre genre, Director director, Studio studio) {
-        this.id = id;
+    public Film(String title, Genre genre, Studio studio) {
         this.title = title;
         this.genre = genre;
-        this.director = director;
         this.studio = studio;
-        this.filmCrew = new ArrayList<FilmCrew>();
+        this.filmCrews = new ArrayList<FilmCrew>();
     }
 
     @Id
@@ -48,7 +47,7 @@ public class Film {
         this.title = title;
     }
 
-    @Column(name = "genre")
+    @Enumerated(value = EnumType.STRING)
     public Genre getGenre() {
         return genre;
     }
@@ -57,31 +56,36 @@ public class Film {
         this.genre = genre;
     }
 
-    @Column(name = "director")
-    public Director getDirector() {
-        return director;
-    }
-
-    public void setDirector(Director director) {
-        this.director = director;
-    }
-
-    @Column(name = "filmCrew")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @ManyToMany
+    @JoinTable(name = "film_filmCrew",
+            joinColumns = {@JoinColumn(name = "film_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "filmCrew_id", nullable = false, updatable = false)})
     public List<FilmCrew> getFilmCrew() {
-        return filmCrew;
+
+        return filmCrews;
     }
 
     public void setFilmCrew(List<FilmCrew> filmCrew) {
-        this.filmCrew = filmCrew;
+        this.filmCrews = filmCrews;
     }
 
-    @Column(name = "studio")
+    @ManyToOne
+    @JoinColumn(name = "film_id", nullable = false)
     public Studio getStudio() {
+
         return studio;
     }
 
     public void setStudio(Studio studio) {
         this.studio = studio;
     }
+
+
+
+    public void addfilmCrew(FilmCrew filmCrew) {
+        this.filmCrews.add(filmCrew);
+    }
 }
+
 

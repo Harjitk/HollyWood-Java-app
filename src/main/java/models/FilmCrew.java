@@ -1,12 +1,15 @@
 package models;
 
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "filmCrews")
+@Inheritance(strategy = InheritanceType.JOINED)
 
 public abstract class FilmCrew {
 
@@ -19,8 +22,7 @@ public abstract class FilmCrew {
     public FilmCrew() {
     }
 
-    public FilmCrew(int id, String firstName, String lastName, int money) {
-        this.id = id;
+    public FilmCrew(String firstName, String lastName, int money) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.money = money;
@@ -65,7 +67,11 @@ public abstract class FilmCrew {
         this.money = money;
     }
 
-    @Column(name = "film")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @ManyToMany
+    @JoinTable(name = "film_filmCrew",
+            joinColumns = {@JoinColumn(name = "film_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "filmCrew_id", nullable = false, updatable = false)})
     public List<Film> getFilm() {
         return films;
     }
@@ -73,4 +79,17 @@ public abstract class FilmCrew {
     public void setFilm(List<Film> film) {
         this.films = film;
     }
+
+    public void addFilm(Film film) {
+        this.films.add(film);
+    }
+
+    public void getPaid(int amount) {
+        this.money += amount;
+    }
 }
+
+////    payActor (studio budget goes down, actors cash goes up)could not get this to work in actor as as money is "private"
+//        in filmCrew
+
+
